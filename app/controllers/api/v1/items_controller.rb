@@ -2,7 +2,7 @@
 
 class Api::V1::ItemsController < ApplicationController
   def index
-    render json: ItemSerializer.new(Item.all)
+    render json: ItemSerializer.new(items_selection)
   end
 
   def show
@@ -29,4 +29,10 @@ class Api::V1::ItemsController < ApplicationController
   def item_params
     params.require(:item).permit(:name, :description, :unit_price, :merchant_id)
   end
+
+  def items_selection
+    return Item.all if params["merchant_id"] == nil
+    return Item.where(merchant_id: params["merchant_id"]) if params["merchant_id"]
+  end
+  
 end
