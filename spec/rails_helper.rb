@@ -39,6 +39,7 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
+  config.before(:suite) { FactoryBot.reload }
 
   Shoulda::Matchers.configure do |config|
     config.integrate do |with|
