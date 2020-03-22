@@ -3,6 +3,6 @@ FactoryBot.define do
     item { nil }
     invoice { nil }
     quantity { 1 }
-    unit_price { 1.5 }
+    unit_price { Faker::Number.between(from = 1.00, to = 100.00) }
   end
 end
