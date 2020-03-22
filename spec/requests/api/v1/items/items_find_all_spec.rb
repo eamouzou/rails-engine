@@ -122,4 +122,19 @@ describe 'Items Find All Requests' do
     expect(parsed_items["data"].third["attributes"]["id"]).to eq(item3.id)
   end
 
+  it "returns items when given multiple attributes with partial values" do
+    item1 = create(:item, merchant: @merchant_1, name: "Car", description: "NIghtly use", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+    item2 = create(:item, merchant: @merchant_2, name: "Car", description: "NigHTtime use", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+    item3 = create(:item, merchant: @merchant_1, name: "Tire", description: "interesting", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+
+    get "/api/v1/items/find_all?name=ca&description=night"
+
+    parsed_items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(parsed_items["data"].count).to eq(2)
+    expect(parsed_items["data"].first["attributes"]["id"]).to eq(item1.id)
+    expect(parsed_items["data"].second["attributes"]["id"]).to eq(item2.id)
+  end
+
 end
