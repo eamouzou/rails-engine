@@ -14,16 +14,6 @@ describe 'Items Find All Requests' do
     @item_8 = create(:item, merchant: @merchant_2, name: 'bobo')
   end
 
-  it 'returns item with given id' do
-    get "/api/v1/items/find_all?id=#{@item_1.id}"
-
-    parsed_items = JSON.parse(response.body)
-
-    expect(response).to be_successful
-    expect(parsed_items["data"].count).to eq(1)
-    expect(parsed_items["data"].first["attributes"]["name"]).to eq(@item_1.name)
-  end
-
   it 'returns items with given merchant id' do
     get "/api/v1/items/find_all?merchant_id=#{@item_3.merchant.id}"
 
