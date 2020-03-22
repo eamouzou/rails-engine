@@ -49,8 +49,8 @@ class Api::V1::Merchants::SearchController < ApplicationController
   end
 
   def get_merchants_multiparams
-    Merchant.where(request.query_parameters) if include_name? == false
-    get_active_record_matches if include_name? == true
+    return Merchant.where(request.query_parameters) if include_name? == false
+    return get_active_record_matches if include_name? == true
   end
 
   def include_name?
