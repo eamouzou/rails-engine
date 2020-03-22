@@ -1,19 +1,22 @@
 class Api::V1::Items::SearchController < ApplicationController
 
   def index
-    params_length = request.query_parameters.keys.count
+
     render json: ItemSerializer.new(get_items) if params_length == 1
     render json: ItemSerializer.new(get_items_multiparams) if params_length > 1
   end
 
   def show
-    params_length = request.query_parameters.keys.count
     render json: ItemSerializer.new(get_items.first) if params_length == 1
     render json: ItemSerializer.new(get_items_multiparams.first) if params_length > 1
   end
 
 
   private
+
+  def params_length
+    request.query_parameters.keys.count
+  end
 
   def parameters
     params.permit(:name, :description, :id, :created_at,
