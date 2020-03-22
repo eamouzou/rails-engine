@@ -59,6 +59,20 @@ describe 'Items Find All Requests' do
     expect(parsed_items["data"].second["attributes"]["id"]).to eq(@item_7.id)
   end
 
+  it 'returns items with given partial description' do
+    desc = @item_7.description
+    partial_desc = desc[0..-3].downcase
+    get "/api/v1/items/find_all?description=#{partial_desc}"
+
+    parsed_items = JSON.parse(response.body)
+
+
+    expect(response).to be_successful
+    expect(parsed_items["data"].count).to eq(2)
+    expect(parsed_items["data"].first["attributes"]["id"]).to eq(@item_3.id)
+    expect(parsed_items["data"].second["attributes"]["id"]).to eq(@item_7.id)
+  end
+
   it 'returns items with given name' do
     get "/api/v1/items/find_all?name=#{@item_4.name}"
 
@@ -92,6 +106,22 @@ describe 'Items Find All Requests' do
     item3 = create(:item, merchant: @merchant_1, created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
 
     get "/api/v1/items/find_all?updated_at=#{item2.updated_at}"
+
+    parsed_items = JSON.parse(response.body)
+
+    expect(response).to be_successful
+    expect(parsed_items["data"].count).to eq(3)
+    expect(parsed_items["data"].first["attributes"]["id"]).to eq(item1.id)
+    expect(parsed_items["data"].second["attributes"]["id"]).to eq(item2.id)
+    expect(parsed_items["data"].third["attributes"]["id"]).to eq(item3.id)
+  end
+
+  it "returns items when given multiple attributes with accurate values" do
+    item1 = create(:item, merchant: @merchant_1, name: "Car", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+    item2 = create(:item, merchant: @merchant_2, name: "Bike", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+    item3 = create(:item, merchant: @merchant_1, name: "Tire", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+
+    get "/api/v1/items/find_all?updated_at=#{item2.updated_at}&created_at=#{item3.created_at}"
 
     parsed_items = JSON.parse(response.body)
 
