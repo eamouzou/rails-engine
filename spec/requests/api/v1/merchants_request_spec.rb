@@ -111,7 +111,7 @@ describe 'Merchants API' do
     expect(response).to be_successful
     parsed_merchants = JSON.parse(response.body)
     expect(parsed_merchants["data"].count).to eq(2)
-    expect(parsed_merchants["data"].first["id"]).to eq(@merchant3.id.to_s)
+    expect(parsed_merchants["data"].first["id"]).to eq(@merchant1.id.to_s)
     expect(parsed_merchants["data"].second["id"]).to eq(@merchant2.id.to_s)
   end
 
@@ -123,6 +123,15 @@ describe 'Merchants API' do
     expect(parsed_merchants["data"].count).to eq(2)
     expect(parsed_merchants["data"].first["id"]).to eq(@merchant3.id.to_s)
     expect(parsed_merchants["data"].second["id"]).to eq(@merchant2.id.to_s)
+  end
+
+  it "can return revenue for a merchant" do
+    get "/api/v1/merchants/#{@merchant2.id}/revenue"
+
+    expect(response).to be_successful
+    parsed_revenue = JSON.parse(response.body)
+    expect(parsed_revenue["data"]["id"]).to eq(@merchant2.id.to_s)
+    expect(parsed_revenue["data"]["attributes"]["revenue"].class).to eq(Float)
   end
 
   it "can find the total revenue across all merchants between the given dates" do
