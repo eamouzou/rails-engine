@@ -31,7 +31,7 @@ describe 'Items API' do
     merchant = create(:merchant)
     item_params = {name: "Bolingo", description: "Love City", unit_price: 5011.96, merchant_id: merchant.id}
 
-    post "/api/v1/items", params: {item: item_params}
+    post "/api/v1/items", params: item_params
 
     item = Item.last
     id = item.id
@@ -51,7 +51,7 @@ describe 'Items API' do
     previous_name = Item.last.name
     item_params = { name: "Toy"}
 
-    put "/api/v1/items/#{id}", params: {item: item_params}
+    put "/api/v1/items/#{id}", params: item_params
     item = Item.find_by(id: id)
     parsed_item = JSON.parse(response.body)
 
