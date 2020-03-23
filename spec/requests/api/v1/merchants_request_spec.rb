@@ -106,8 +106,17 @@ describe 'Merchants API' do
   end
 
   it "can find merchants by most revenue" do
-
     get '/api/v1/merchants/most_revenue?quantity=2'
+
+    expect(response).to be_successful
+    parsed_merchants = JSON.parse(response.body)
+    expect(parsed_merchants["data"].count).to eq(2)
+    expect(parsed_merchants["data"].first["id"]).to eq(@merchant3.id.to_s)
+    expect(parsed_merchants["data"].second["id"]).to eq(@merchant2.id.to_s)
+  end
+
+  it "can find merchants by most items sold" do
+    get '/api/v1/merchants/most_items?quantity=2'
 
     expect(response).to be_successful
     parsed_merchants = JSON.parse(response.body)
