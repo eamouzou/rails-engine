@@ -10,7 +10,7 @@ end
 task import_csv_files: :environment do
   Merchant.destroy_all
   counter = 0
-  CSV.foreach("db/data/merchants.csv", headers: true, header_converters: :symbol, converters: :all, header_converters: :symbol, converters: :all) do |row|
+  CSV.foreach("db/data/merchants.csv", headers: true, header_converters: :symbol, converters: :all) do |row|
     merchant = Merchant.create(row.to_hash)
     counter += 1 if merchant.persisted?
   end
@@ -31,7 +31,10 @@ task import_csv_files: :environment do
   Item.destroy_all
   counter = 0
   CSV.foreach("db/data/items.csv", headers: true, header_converters: :symbol, converters: :all) do |row|
-    item = Item.create(row.to_hash)
+    item_hash = row.to_h
+    item_float = item_hash[:unit_price].to_f
+    item_hash[:unit_price] = item_float / 100
+    item = Item.create(item_hash)
     counter += 1 if item.persisted?
   end
   puts "Imported #{counter} items."

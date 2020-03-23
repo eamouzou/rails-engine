@@ -29,17 +29,20 @@ describe 'Items API' do
 
   it "can create a item" do
     merchant = create(:merchant)
-    item_params = {name: "Bolingo", description: "Love City", unit_price: 4.56, merchant_id: merchant.id}
+    item_params = {name: "Bolingo", description: "Love City", unit_price: 5011.96, merchant_id: merchant.id}
 
-    post "/api/v1/items", params: {item: item_params}
+    post "/api/v1/items", params: item_params
 
     item = Item.last
     id = item.id
-    parsed_item = JSON.parse(response.body)
+    parsed_item = JSON.parse(response.body, symbolize_names: true)
 
     expect(response).to be_successful
     expect(item.name).to eq(item_params[:name])
-    expect(parsed_item['data']['attributes']).to eq({"description"=>"Love City", "id"=>id, "name"=>"Bolingo", "unit_price"=>4.56, "merchant_id"=>merchant.id})
+    expect(parsed_item[:data][:attributes][:name]).to eq(item.name)
+    expect(parsed_item[:data][:attributes][:description]).to eq(item.description)
+    expect(parsed_item[:data][:attributes][:unit_price]).to eq(item.unit_price)
+    expect(parsed_item[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
   end
 
   it "can update" do
@@ -48,7 +51,7 @@ describe 'Items API' do
     previous_name = Item.last.name
     item_params = { name: "Toy"}
 
-    put "/api/v1/items/#{id}", params: {item: item_params}
+    put "/api/v1/items/#{id}", params: item_params
     item = Item.find_by(id: id)
     parsed_item = JSON.parse(response.body)
 

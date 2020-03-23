@@ -127,7 +127,7 @@ describe 'Items Find All Requests' do
     item2 = create(:item, merchant: @merchant_2, name: "Car", description: "NigHTtime use", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
     item3 = create(:item, merchant: @merchant_1, name: "Tire", description: "interesting", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
 
-    get "/api/v1/items/find_all?name=ca&description=night"
+    get "/api/v1/items/find_all?name=car&description=nightly"
 
     parsed_items = JSON.parse(response.body)
 
