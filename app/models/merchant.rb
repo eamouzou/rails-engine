@@ -27,10 +27,16 @@ class Merchant < ApplicationRecord
   def self.revenue_by_dates(start, finish)
     start = start + " 01:00:00"
     finish = finish + " 01:00:00"
-    InvoiceItem.joins(invoice: [:transactions])
-    .select('sum(invoice_items.unit_price * invoice_items.quantity) as revenue')
-    .where(transactions: {result: "success"})
+    joins(invoices: [:invoice_items, :transactions])
+    .where(transactions: {result: :success})
     .where("invoice_items.created_at >= '#{start}' AND invoice_items.created_at <= '#{finish}'")
+    .sum('unit_price * quantity')
+  end
+
+  def self.revenue(merchant)
+    merchant.joins(invoices: [:invoice_items, :transactions])
+    .where(transactions: {result: :success})
+    .sum('unit_price * quantity')
   end
 
 end
