@@ -63,9 +63,7 @@ task import_csv_files: :environment do
   InvoiceItem.destroy_all
   counter = 0
   CSV.foreach("db/data/invoice_items.csv", headers: true, header_converters: :symbol, converters: :all) do |row|
-    invoice_item_hash = row.to_h
-    invoice_item_hash["unit_price"] = (invoice_item_hash["unit_price"].to_f / 100).round(2)
-    invoice_item = InvoiceItem.create(invoice_item_hash)
+    invoice_item = InvoiceItem.create(row.to_hash)
     counter += 1 if invoice_item.persisted?
   end
   puts "Imported #{counter} invoice items."
