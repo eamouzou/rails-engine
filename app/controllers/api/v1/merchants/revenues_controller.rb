@@ -5,7 +5,18 @@ class Api::V1::Merchants::RevenuesController < ApplicationController
   end
 
   def show
-    revenue = Merchant.revenue_by_dates(params[:start], params[:end])
-    render json: RevenueSerializer.new(revenue)
+    update_merchant(params[:merchant_id])
+    render json: RevenueSerializer.new(Merchant.find(params[:merchant_id]))
+  end
+
+  private
+
+  def update_merchant(id)
+    merchant = Merchant.where(id: id)
+    merchant.update(revenue: get_revenue(merchant))
+  end
+
+  def get_revenue(merchant)
+    Merchant.revenue(merchant)
   end
 end
