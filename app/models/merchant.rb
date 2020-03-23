@@ -7,9 +7,9 @@ class Merchant < ApplicationRecord
   def self.most_revenue(quantity)
     quantity = quantity.to_i
     joins(invoices: [:invoice_items, :transactions])
-    .where(transactions: {result: "success"})
-    .select('merchants.*, sum(invoice_items.unit_price*invoice_items.quantity) as revenue')
+    .select('merchants.*, sum(invoice_items.unit_price * invoice_items.quantity) as revenue')
     .group(:id)
+    .where(transactions: {result: "success"})
     .order(revenue: :desc)
     .limit(quantity)
   end
@@ -17,10 +17,20 @@ class Merchant < ApplicationRecord
   def self.most_items(quantity)
     quantity = quantity.to_i
     joins(invoices: [:invoice_items, :transactions])
-    .select('merchants.*, sum(invoice_items.quantity) as total_sold')
+    .select('merchants.*, sum(invoice_items.quantity) as total_amount')
     .group(:id)
-    .order(total_sold: :desc)
+    .where(transactions: {result: "success"})
+    .order(total_amount: :desc)
     .limit(quantity)
+  end
+
+  def self.revenue_by_dates(start, finish)
+    start = start + " 01:00:00"
+    finish = finish + " 01:00:00"
+    InvoiceItem.joins(invoice: [:transactions])
+    .select('sum(invoice_items.unit_price * invoice_items.quantity) as revenue')
+    .where(transactions: {result: "success"})
+    .where("invoice_items.created_at >= '#{start}' AND invoice_items.created_at <= '#{finish}'")
   end
 
 end
