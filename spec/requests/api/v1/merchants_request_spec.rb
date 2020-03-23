@@ -6,20 +6,20 @@ describe 'Merchants API' do
     @merchant2 = create(:merchant, name: 'merchant2')
     @merchant3 = create(:merchant, name: 'merchant3')
 
-    @item1 = create(:item, merchant: @merchant1, name: "Car Shoes", unit_price: 30.45, description: "NIghtly use", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+    @item1 = create(:item, merchant: @merchant1, name: "Car Shoes", unit_price: 30.45, description: "NIghtly use", created_at: "2020-03-20 01:00:00 UTC", updated_at: "2020-03-20 01:17:08 UTC")
     @item2 = create(:item, merchant: @merchant1, name: "Tire", unit_price: 15.20, description: "interesting", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
-    @item3 = create(:item, merchant: @merchant2, name: "Wheel", unit_price: 65.00, description: "All weather", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
-    @item4 = create(:item, merchant: @merchant2, name: "Brake pad", unit_price: 26.72, description: "brand new", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
-    @item5 = create(:item, merchant: @merchant3, name: "Shoes", unit_price: 30.87, description: "black and white", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
-    @item6 = create(:item, merchant: @merchant3, name: "Socks", unit_price: 123.76, description: "no holes", created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+    @item3 = create(:item, merchant: @merchant2, name: "Wheel", unit_price: 65.00, description: "All weather", created_at: "2020-03-18 01:00:00 UTC", updated_at: "2020-03-18 01:17:08 UTC")
+    @item4 = create(:item, merchant: @merchant2, name: "Brake pad", unit_price: 26.72, description: "brand new", created_at: "2020-03-16 01:00:00 UTC", updated_at: "2020-03-16 01:17:08 UTC")
+    @item5 = create(:item, merchant: @merchant3, name: "Shoes", unit_price: 30.87, description: "black and white", created_at: "2020-03-22 01:00:00 UTC", updated_at: "2020-03-22 01:17:08 UTC")
+    @item6 = create(:item, merchant: @merchant3, name: "Socks", unit_price: 123.76, description: "no holes", created_at: "2020-03-19 01:00:00 UTC", updated_at: "2020-03-19 01:17:08 UTC")
 
     @customer1 = create(:customer, first_name: 'First', last_name: 'Last')
     @customer2 = create(:customer, first_name: 'Second', last_name: 'Last')
 
-    @invoice1 = create(:invoice, customer: @customer1, merchant: @merchant1)
-    @invoice2 = create(:invoice, customer: @customer1, merchant: @merchant2)
-    @invoice3 = create(:invoice, customer: @customer1, merchant: @merchant3)
-    @invoice4 = create(:invoice, customer: @customer2, merchant: @merchant3)
+    @invoice1 = create(:invoice, customer: @customer1, merchant: @merchant1, created_at: "2020-03-20 01:00:00 UTC", updated_at: "2020-03-20 01:17:08 UTC")
+    @invoice2 = create(:invoice, customer: @customer1, merchant: @merchant2, created_at: "2020-03-21 01:00:00 UTC", updated_at: "2020-03-21 01:17:08 UTC")
+    @invoice3 = create(:invoice, customer: @customer1, merchant: @merchant3, created_at: "2020-03-18 01:00:00 UTC", updated_at: "2020-03-18 01:17:08 UTC")
+    @invoice4 = create(:invoice, customer: @customer2, merchant: @merchant3, created_at: "2020-03-16 01:00:00 UTC", updated_at: "2020-03-16 01:17:08 UTC")
 
     @invoice_item1 = create(:invoice_item, item: @item1, invoice: @invoice1, quantity: 7, unit_price: @item1.unit_price)
     @invoice_item2 = create(:invoice_item, item: @item2, invoice: @invoice1, quantity: 12, unit_price: @item2.unit_price)
@@ -123,6 +123,12 @@ describe 'Merchants API' do
     expect(parsed_merchants["data"].count).to eq(2)
     expect(parsed_merchants["data"].first["id"]).to eq(@merchant3.id.to_s)
     expect(parsed_merchants["data"].second["id"]).to eq(@merchant2.id.to_s)
+  end
+
+  it "can find the total revenue across all merchants between the given dates" do
+    get '/api/v1/revenue?start=2020-03-18&end=2020-03-19'
+
+    expect(response).to be_successful
   end
 
 
