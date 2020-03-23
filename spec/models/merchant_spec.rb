@@ -44,8 +44,10 @@ RSpec.describe Merchant, type: :model do
     end
 
     it '#most_revenue' do
-      result = [@merchant3, @merchant2]
-      expect(Merchant.most_revenue(2)).to eq(result)
+      result = [@merchant1, @merchant2]
+      method_result = Merchant.most_revenue(2)
+      expect(method_result.first.id).to eq(result.first.id)
+      expect(method_result.second.id).to eq(result.second.id)
     end
 
     it '#most_items' do
@@ -59,7 +61,12 @@ RSpec.describe Merchant, type: :model do
     it '#revenue_by_dates' do
       start = "2020-03-18"
       finish = "2020-03-19"
-      expect(Merchant.revenue_by_dates(start, finish))
+      expect(Merchant.revenue_by_dates(start, finish).class).to eq(Float)
+    end
+
+    it '#revenue' do
+      result = Merchant.revenue(Merchant.where(id: @merchant3.id))
+      expect(result.class).to eq(Float)
     end
   end
 end
