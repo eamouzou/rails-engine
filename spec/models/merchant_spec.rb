@@ -52,8 +52,14 @@ RSpec.describe Merchant, type: :model do
       expected_result = [@merchant3, @merchant2]
       method_result = Merchant.most_items(2)
       expect(method_result).to eq(expected_result)
-      expect(method_result.first.total_sold).to eq(68)
-      expect(method_result.second.total_sold).to eq(36)
+      expect(method_result.first.total_amount).to eq(53)
+      expect(method_result.second.total_amount).to eq(36)
+    end
+
+    it '#revenue_by_dates' do
+      start = "2020-03-18"
+      finish = "2020-03-19"
+      expect(Merchant.revenue_by_dates(start, finish))
     end
   end
 end
