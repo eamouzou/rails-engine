@@ -47,5 +47,13 @@ RSpec.describe Merchant, type: :model do
       result = [@merchant3, @merchant2]
       expect(Merchant.most_revenue(2)).to eq(result)
     end
+
+    it '#most_items' do
+      expected_result = [@merchant3, @merchant2]
+      method_result = Merchant.most_items(2)
+      expect(method_result).to eq(expected_result)
+      expect(method_result.first.total_sold).to eq(68)
+      expect(method_result.second.total_sold).to eq(36)
+    end
   end
 end
