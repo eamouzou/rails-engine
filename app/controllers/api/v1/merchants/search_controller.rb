@@ -1,19 +1,21 @@
 class Api::V1::Merchants::SearchController < ApplicationController
 
   def index
-    params_length = request.query_parameters.keys.count
     render json: MerchantSerializer.new(get_merchants) if params_length == 1
     render json: MerchantSerializer.new(get_merchants_multiparams) if params_length > 1
   end
 
   def show
-    params_length = request.query_parameters.keys.count
     render json: MerchantSerializer.new(get_merchant) if params_length == 1
     render json: MerchantSerializer.new(get_merchants_multiparams.first) if params_length > 1
   end
 
 
   private
+
+  def params_length
+    request.query_parameters.keys.count
+  end
 
   def parameters
     params.permit(:name, :created_at, :updated_at)
